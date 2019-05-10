@@ -257,6 +257,62 @@ public class EventEngine : MonoBehaviour
             return changeCameraSpeed(newSpeed);
         }
 
+        if (commandName == "walkNW")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "NW", distance, false);
+        }
+        
+        if (commandName == "walkNE")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "NE", distance, false);
+        }
+        
+        if (commandName == "walkSE")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "SE", distance, false);
+        }
+        
+        if (commandName == "walkSW")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "SW", distance, false);
+        }
+        
+        if (commandName == "runNW")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "NW", distance, true);
+        }
+        
+        if (commandName == "runNE")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "NE", distance, true);
+        }
+        
+        if (commandName == "runSE")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "SE", distance, true);
+        }
+        
+        if (commandName == "runSW")
+        {
+            var cm = command.getGameObject().GetComponent<CharacterMovement>();
+            var distance = command.getFloatParameters()[0];
+            return autoMove(cm, "SW", distance, true);
+        }
+
         return true;
     }
     
@@ -399,6 +455,138 @@ public class EventEngine : MonoBehaviour
             else
             {
                 cm.setMoveWest(false);
+                cm.setRunning(false);
+                autoMoving = false;
+            }
+        }
+
+        if (direction == "NW")
+        {
+            if (!autoMoving)
+            {
+                characterDestination = new Vector3(pos.x - distance, pos.y + distance, pos.z);
+                autoMoving = true;
+            }
+            
+            // determine if destination has been reached
+            destinationReached = (pos.x <= characterDestination.x && pos.y >= characterDestination.y);
+
+            if (!destinationReached)
+            {
+                cm.setControlOverride(true);
+                
+                // determine if running
+                if (running)
+                {
+                    cm.setRunning(true);
+                }
+                
+                cm.setMoveWest(true);
+                cm.setMoveNorth(true);
+            }
+            else
+            {
+                cm.setMoveWest(false);
+                cm.setMoveNorth(false);
+                cm.setRunning(false);
+                autoMoving = false;
+            }
+        }
+        
+        if (direction == "NE")
+        {
+            if (!autoMoving)
+            {
+                characterDestination = new Vector3(pos.x + distance, pos.y + distance, pos.z);
+                autoMoving = true;
+            }
+            
+            // determine if destination has been reached
+            destinationReached = (pos.x >= characterDestination.x && pos.y >= characterDestination.y);
+
+            if (!destinationReached)
+            {
+                cm.setControlOverride(true);
+                
+                // determine if running
+                if (running)
+                {
+                    cm.setRunning(true);
+                }
+                
+                cm.setMoveEast(true);
+                cm.setMoveNorth(true);
+            }
+            else
+            {
+                cm.setMoveEast(false);
+                cm.setMoveNorth(false);
+                cm.setRunning(false);
+                autoMoving = false;
+            }
+        }
+        
+        if (direction == "SE")
+        {
+            if (!autoMoving)
+            {
+                characterDestination = new Vector3(pos.x + distance, pos.y - distance, pos.z);
+                autoMoving = true;
+            }
+            
+            // determine if destination has been reached
+            destinationReached = (pos.x >= characterDestination.x && pos.y <= characterDestination.y);
+
+            if (!destinationReached)
+            {
+                cm.setControlOverride(true);
+                
+                // determine if running
+                if (running)
+                {
+                    cm.setRunning(true);
+                }
+                
+                cm.setMoveEast(true);
+                cm.setMoveSouth(true);
+            }
+            else
+            {
+                cm.setMoveEast(false);
+                cm.setMoveSouth(false);
+                cm.setRunning(false);
+                autoMoving = false;
+            }
+        }
+        
+        if (direction == "SW")
+        {
+            if (!autoMoving)
+            {
+                characterDestination = new Vector3(pos.x - distance, pos.y - distance, pos.z);
+                autoMoving = true;
+            }
+            
+            // determine if destination has been reached
+            destinationReached = (pos.x <= characterDestination.x && pos.y <= characterDestination.y);
+
+            if (!destinationReached)
+            {
+                cm.setControlOverride(true);
+                
+                // determine if running
+                if (running)
+                {
+                    cm.setRunning(true);
+                }
+                
+                cm.setMoveWest(true);
+                cm.setMoveSouth(true);
+            }
+            else
+            {
+                cm.setMoveWest(false);
+                cm.setMoveSouth(false);
                 cm.setRunning(false);
                 autoMoving = false;
             }

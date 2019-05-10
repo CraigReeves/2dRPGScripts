@@ -264,6 +264,78 @@ public abstract class EventSequence : MonoBehaviour
         command.setGameObjectParam(character);
         eventWorker.storeInQueue(command);
     }
+
+    protected void walkNW(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("walkNW");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void walkNE(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("walkNE");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void walkSE(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("walkSE");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void walkSW(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("walkSW");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void runNW(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("runNW");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void runNE(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("runNE");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void runSE(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("runSE");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void runSW(GameObject character, float distance)
+    {
+        var command = ScriptableObject.CreateInstance<Command>();
+        command.setName("runSW");
+        command.setFloatParams(distance);
+        command.setGameObjectParam(character);
+        eventWorker.storeInQueue(command);
+    }
     
     protected void walkNorth(GameObject character, float distance)
     {
