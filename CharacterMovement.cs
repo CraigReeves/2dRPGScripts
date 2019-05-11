@@ -18,8 +18,13 @@ public abstract class CharacterMovement : MonoBehaviour
     protected bool _movingSouth;
     protected bool isMoving;
 
+    // determines if character is following another
+    protected bool isFollowing;
+
     protected float dirX;
     protected float dirY;
+
+    private int stopTick = 0;
     
 
     // determines how much more speed running adds
@@ -103,29 +108,28 @@ public abstract class CharacterMovement : MonoBehaviour
         anim.SetFloat("MoveY", dirY);
     }
     
-    
     protected void FixedUpdate()
     {
         // check movement north
-        if (_movingNorth)
+        if (_movingNorth && !isFollowing)
         {
             MoveNorth();
         }
         
         // check movement south
-        if (_movingSouth)
+        if (_movingSouth && !isFollowing)
         {
             MoveSouth();
         }
         
         // check movement east
-        if (_movingEast)
+        if (_movingEast && !isFollowing)
         {
             MoveEast();
         }
         
         // check movement west
-        if (_movingWest)
+        if (_movingWest && !isFollowing)
         {
             MoveWest();
         }
@@ -202,8 +206,35 @@ public abstract class CharacterMovement : MonoBehaviour
     }
     
     // Setters and Getters
+    public void setIsFollowing(bool setting)
+    {
+        isFollowing = setting;
+    }
+
+    public bool getIsFollowing()
+    {
+        return isFollowing;
+    }
     
     // clears directional buffer
+    public void clearDirectionalBuffer(int delay)
+    {
+        // we will not clear directional buffer right away, but we will wait a certain number of frames
+        if (stopTick >= delay)
+        {
+            isRunning = false;
+            _movingNorth = false;
+            _movingWest = false;
+            _movingSouth = false;
+            _movingEast = false;
+            stopTick = 0;
+        }
+        else
+        {
+            stopTick++;
+        }
+    }
+    
     public void clearDirectionalBuffer()
     {
         isRunning = false;
@@ -246,6 +277,11 @@ public abstract class CharacterMovement : MonoBehaviour
         _movingSouth = setting;
     }
 
+    public bool getIsMoving()
+    {
+        return isMoving;
+    }
+
     // gets if player can be controlled
     public bool isUnderPlayerControl()
     {
@@ -258,4 +294,26 @@ public abstract class CharacterMovement : MonoBehaviour
         return angleLimit;
     }
     
+    // gets move speed
+    public float getMoveSpeed()
+    {
+        return isRunning ? (moveSpeed + runBoost) : moveSpeed;
+    }
+
+    public bool isMovingNorth()
+    {
+        return _movingNorth;
+    }
+    public bool isMovingSouth()
+    {
+        return _movingSouth;
+    }
+    public bool isMovingEast()
+    {
+        return _movingEast;
+    }
+    public bool isMovingWest()
+    {
+        return _movingWest;
+    }
 }
