@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class PlayerFollow : MonoBehaviour
@@ -18,6 +15,7 @@ public class PlayerFollow : MonoBehaviour
         cm = GetComponent<CharacterMovement>();
         cm.setIsFollowing(true);
         target = target == null ? FindObjectOfType<PlayerMovement>() : target;
+        cm.setMoveSpeed(target.getMoveSpeed());
     }
     
     void Update()
@@ -31,6 +29,7 @@ public class PlayerFollow : MonoBehaviour
     {
         if (Vector2.Distance(transform.position, target.transform.position) > stoppingDistance)
         {
+            cm.setRunning(target.getIsRunning());
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, target.getMoveSpeed() * Time.deltaTime);
             handleAnimation();
         }

@@ -17,6 +17,9 @@ public abstract class CharacterMovement : MonoBehaviour
     protected bool _movingEast;
     protected bool _movingSouth;
     protected bool isMoving;
+    private float oldMoveSpeed;
+    private float diagOffset = 0.707f;
+    private float runningDiagOffset = 0.107f;
 
     // determines if character is following another
     protected bool isFollowing;
@@ -24,8 +27,8 @@ public abstract class CharacterMovement : MonoBehaviour
     protected float dirX;
     protected float dirY;
 
+    // stopTick is used for clearDirectionalBuffer. MovementSpeed returns player movement speed
     private int stopTick = 0;
-    
 
     // determines how much more speed running adds
     [SerializeField]
@@ -37,7 +40,6 @@ public abstract class CharacterMovement : MonoBehaviour
     
     // determine if character is running
     private bool isRunning;
-    private float runSpeed;
     
     // min and max map bounds. to keep player within the bounds of the map
     private float mapMinX;
@@ -57,7 +59,7 @@ public abstract class CharacterMovement : MonoBehaviour
     protected void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();         
+        anim = GetComponent<Animator>();
     }
 
     private void HandleMovingAndNotMovingAnimations()
@@ -110,77 +112,79 @@ public abstract class CharacterMovement : MonoBehaviour
     
     protected void FixedUpdate()
     {
-        // check movement north
-        if (_movingNorth && !isFollowing)
+        if (!isFollowing)
         {
-            MoveNorth();
-        }
+            // check movement north
+            if (_movingNorth)
+            {
+                MoveNorth(_movingEast || _movingWest ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement south
-        if (_movingSouth && !isFollowing)
-        {
-            MoveSouth();
-        }
+            // check movement south
+            if (_movingSouth)
+            {
+                MoveSouth(_movingEast || _movingWest ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement east
-        if (_movingEast && !isFollowing)
-        {
-            MoveEast();
-        }
+            // check movement east
+            if (_movingEast)
+            {
+                MoveEast(_movingNorth || _movingSouth ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement west
-        if (_movingWest && !isFollowing)
-        {
-            MoveWest();
+            // check movement west
+            if (_movingWest)
+            {
+                MoveWest(_movingNorth || _movingSouth ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         }
     }
     
-    
-    private void MoveNorth()
+    private void MoveNorth(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(0, moveSpeed * Time.deltaTime, 0);
+            transform.Translate(0, speed * Time.deltaTime, 0);
         }
         else
         {
-            transform.Translate(0, runSpeed * Time.deltaTime, 0);
+            transform.Translate(0, (speed + runBoost) * Time.deltaTime, 0);
         }
     }
 
-    private void MoveSouth()
+    private void MoveSouth(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(0, -moveSpeed * Time.deltaTime, 0);
+            transform.Translate(0, -speed * Time.deltaTime, 0);
         }
         else
         {
-            transform.Translate(0, -runSpeed * Time.deltaTime, 0);
+            transform.Translate(0, -(speed + runBoost) * Time.deltaTime, 0);
         }
     }
 
-    private void MoveEast()
+    private void MoveEast(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+            transform.Translate(speed * Time.deltaTime, 0, 0);
         }
         else
         {
-            transform.Translate(runSpeed * Time.deltaTime, 0, 0);
+            transform.Translate((speed + runBoost) * Time.deltaTime, 0, 0);
         }
     }
 
-    private void MoveWest()
+    private void MoveWest(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(-moveSpeed * Time.deltaTime, 0, 0); 
+            transform.Translate(-speed * Time.deltaTime, 0, 0); 
         }
         else
         {
-            transform.Translate(-runSpeed * Time.deltaTime, 0, 0);
+            transform.Translate(-(speed + runBoost) * Time.deltaTime, 0, 0);
         }
     }
 
@@ -194,9 +198,6 @@ public abstract class CharacterMovement : MonoBehaviour
         {
             _spriteRenderer.sortingOrder = Mathf.RoundToInt(-(transform.position.y * 10));
         }
-
-        // handle running
-        runSpeed = moveSpeed + runBoost;
         
         // handle moving and not moving animations
         HandleMovingAndNotMovingAnimations();
@@ -298,6 +299,17 @@ public abstract class CharacterMovement : MonoBehaviour
     public float getMoveSpeed()
     {
         return isRunning ? (moveSpeed + runBoost) : moveSpeed;
+    }
+
+    // set move speed
+    public void setMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public bool getIsRunning()
+    {
+        return isRunning;
     }
 
     public bool isMovingNorth()
