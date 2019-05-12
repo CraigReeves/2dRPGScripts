@@ -21,7 +21,7 @@ public class BeardMan : EventSequence
     {
         stealControl(player);
         remotePause(wanderScript);
-        turnToFace(npc, player, false);
+        turnToFace(npc, player);
         msg("Man", "Your engine is coming along, you know.");
         wait();
         msg("Craig","Thanks!");

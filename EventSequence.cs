@@ -417,19 +417,14 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void turnToFace(GameObject character, GameObject reference, bool displayAngle)
+    protected void turnToFace(GameObject character, GameObject reference)
     {
         CharacterMovement cm = character.GetComponent<CharacterMovement>();
         var playerPos = new Vector2(reference.transform.position.x, reference.transform.position.y);
-        var npcPos = new Vector2(character.transform.position.x, reference.transform.position.y);
-        var angle = Vector2.Angle(npcPos, playerPos);
-
-        if (displayAngle)
-        {
-            Debug.Log("Angle: " + angle);
-        }
+        var npcPos = new Vector2(character.transform.position.x, character.transform.position.y);
+        var angle = Math.Abs(Math.Atan2(npcPos.y - playerPos.y, npcPos.x - playerPos.x) * 180f / Math.PI);
         
-        if (angle <= cm.getAngleLimit())
+        if (angle >= 45f && angle <= 120f)
         {
             // character will either look north or south
             if (reference.transform.position.y > character.transform.position.y)
