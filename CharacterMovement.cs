@@ -17,10 +17,22 @@ public abstract class CharacterMovement : MonoBehaviour
     protected bool _movingEast;
     protected bool _movingSouth;
     protected bool isMoving;
+    private float oldMoveSpeed;
+    private float diagOffset = 0.707f;
+    private float runningDiagOffset = 0.107f;
+
+    // determines if collision rules apply even for other characters. by default characters and players can walk 
+    // through each other
+    public bool solidForPlayers;
+    
+    // determines if character is following another
+    protected bool isFollowing;
 
     protected float dirX;
     protected float dirY;
-    
+
+    // stopTick is used for clearDirectionalBuffer. MovementSpeed returns player movement speed
+    private int stopTick = 0;
 
     // determines how much more speed running adds
     [SerializeField]
@@ -32,7 +44,6 @@ public abstract class CharacterMovement : MonoBehaviour
     
     // determine if character is running
     private bool isRunning;
-    private float runSpeed;
     
     // min and max map bounds. to keep player within the bounds of the map
     private float mapMinX;
@@ -52,7 +63,19 @@ public abstract class CharacterMovement : MonoBehaviour
     protected void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();         
+        anim = GetComponent<Animator>();
+        
+        // ignore collision detection between characters
+        if (!solidForPlayers)
+        {
+            var characters = FindObjectsOfType<CharacterMovement>();
+            foreach (CharacterMovement character in characters)
+            {
+                if (!character.solidForPlayers)
+                Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), character.gameObject.GetComponent<Collider2D>());
+            }
+        }
+        
     }
 
     private void HandleMovingAndNotMovingAnimations()
@@ -103,80 +126,81 @@ public abstract class CharacterMovement : MonoBehaviour
         anim.SetFloat("MoveY", dirY);
     }
     
-    
     protected void FixedUpdate()
     {
-        // check movement north
-        if (_movingNorth)
+        if (!isFollowing)
         {
-            MoveNorth();
-        }
+            // check movement north
+            if (_movingNorth)
+            {
+                MoveNorth(_movingEast || _movingWest ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement south
-        if (_movingSouth)
-        {
-            MoveSouth();
-        }
+            // check movement south
+            if (_movingSouth)
+            {
+                MoveSouth(_movingEast || _movingWest ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement east
-        if (_movingEast)
-        {
-            MoveEast();
-        }
+            // check movement east
+            if (_movingEast)
+            {
+                MoveEast(_movingNorth || _movingSouth ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         
-        // check movement west
-        if (_movingWest)
-        {
-            MoveWest();
+            // check movement west
+            if (_movingWest)
+            {
+                MoveWest(_movingNorth || _movingSouth ? moveSpeed * (isRunning ? runningDiagOffset : diagOffset) : moveSpeed);
+            }
         }
     }
     
-    
-    private void MoveNorth()
+    private void MoveNorth(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(0, moveSpeed * Time.deltaTime, 0);
+            transform.Translate(0, speed * Time.deltaTime, 0);
         }
         else
         {
-            transform.Translate(0, runSpeed * Time.deltaTime, 0);
+            transform.Translate(0, (speed + runBoost) * Time.deltaTime, 0);
         }
     }
 
-    private void MoveSouth()
+    private void MoveSouth(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(0, -moveSpeed * Time.deltaTime, 0);
+            transform.Translate(0, -speed * Time.deltaTime, 0);
         }
         else
         {
-            transform.Translate(0, -runSpeed * Time.deltaTime, 0);
+            transform.Translate(0, -(speed + runBoost) * Time.deltaTime, 0);
         }
     }
 
-    private void MoveEast()
+    private void MoveEast(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+            transform.Translate(speed * Time.deltaTime, 0, 0);
         }
         else
         {
-            transform.Translate(runSpeed * Time.deltaTime, 0, 0);
+            transform.Translate((speed + runBoost) * Time.deltaTime, 0, 0);
         }
     }
 
-    private void MoveWest()
+    private void MoveWest(float speed)
     {
         if (!isRunning)
         {
-            transform.Translate(-moveSpeed * Time.deltaTime, 0, 0); 
+            transform.Translate(-speed * Time.deltaTime, 0, 0); 
         }
         else
         {
-            transform.Translate(-runSpeed * Time.deltaTime, 0, 0);
+            transform.Translate(-(speed + runBoost) * Time.deltaTime, 0, 0);
         }
     }
 
@@ -190,9 +214,6 @@ public abstract class CharacterMovement : MonoBehaviour
         {
             _spriteRenderer.sortingOrder = Mathf.RoundToInt(-(transform.position.y * 10));
         }
-
-        // handle running
-        runSpeed = moveSpeed + runBoost;
         
         // handle moving and not moving animations
         HandleMovingAndNotMovingAnimations();
@@ -202,8 +223,35 @@ public abstract class CharacterMovement : MonoBehaviour
     }
     
     // Setters and Getters
+    public void setIsFollowing(bool setting)
+    {
+        isFollowing = setting;
+    }
+
+    public bool getIsFollowing()
+    {
+        return isFollowing;
+    }
     
     // clears directional buffer
+    public void clearDirectionalBuffer(int delay)
+    {
+        // we will not clear directional buffer right away, but we will wait a certain number of frames
+        if (stopTick >= delay)
+        {
+            isRunning = false;
+            _movingNorth = false;
+            _movingWest = false;
+            _movingSouth = false;
+            _movingEast = false;
+            stopTick = 0;
+        }
+        else
+        {
+            stopTick++;
+        }
+    }
+    
     public void clearDirectionalBuffer()
     {
         isRunning = false;
@@ -246,6 +294,11 @@ public abstract class CharacterMovement : MonoBehaviour
         _movingSouth = setting;
     }
 
+    public bool getIsMoving()
+    {
+        return isMoving;
+    }
+
     // gets if player can be controlled
     public bool isUnderPlayerControl()
     {
@@ -258,4 +311,37 @@ public abstract class CharacterMovement : MonoBehaviour
         return angleLimit;
     }
     
+    // gets move speed
+    public float getMoveSpeed()
+    {
+        return isRunning ? (moveSpeed + runBoost) : moveSpeed;
+    }
+
+    // set move speed
+    public void setMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public bool getIsRunning()
+    {
+        return isRunning;
+    }
+
+    public bool isMovingNorth()
+    {
+        return _movingNorth;
+    }
+    public bool isMovingSouth()
+    {
+        return _movingSouth;
+    }
+    public bool isMovingEast()
+    {
+        return _movingEast;
+    }
+    public bool isMovingWest()
+    {
+        return _movingWest;
+    }
 }
