@@ -29,7 +29,7 @@ public class SampleDialogEvent : EventSequence
             case "WaitingOnDrake":
                 remotePause(exampleEvent);
                 stealControl(player);
-                turnToFace(npc, player, false);
+                turnToFace(npc, player);
                 msg("Woman", "You better go outside right now and stay out of my house.");
                 wait();
                 msgClose();
@@ -39,7 +39,7 @@ public class SampleDialogEvent : EventSequence
             default:
                 remotePause(exampleEvent);
                 stealControl(player);
-                turnToFace(npc, player, false);
+                turnToFace(npc, player);
                 msg("Woman", "Hi there!");
                 wait();
                 msg("Woman", "Unity is awesome, isn't it?");

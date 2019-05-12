@@ -38,10 +38,6 @@ public abstract class CharacterMovement : MonoBehaviour
     [SerializeField]
     protected float runBoost = 2.8f;
     
-    // for the turnTo function
-    [SerializeField]
-    protected float angleLimit = 1f;
-    
     // determine if character is running
     private bool isRunning;
     
@@ -303,12 +299,6 @@ public abstract class CharacterMovement : MonoBehaviour
     public bool isUnderPlayerControl()
     {
         return !controlOverride;
-    }
-    
-    // gets angle limit
-    public float getAngleLimit()
-    {
-        return angleLimit;
     }
     
     // gets move speed
