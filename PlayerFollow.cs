@@ -15,7 +15,7 @@ public class PlayerFollow : MonoBehaviour
         cm = GetComponent<CharacterMovement>();
         cm.setIsFollowing(true);
         target = target == null ? FindObjectOfType<PlayerMovement>() : target;
-        cm.setMoveSpeed(target.getMoveSpeed());
+        cm.setMoveSpeed(target.getMoveSpeed()); 
     }
     
     void Update()

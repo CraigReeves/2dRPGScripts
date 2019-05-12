@@ -21,6 +21,10 @@ public abstract class CharacterMovement : MonoBehaviour
     private float diagOffset = 0.707f;
     private float runningDiagOffset = 0.107f;
 
+    // determines if collision rules apply even for other characters. by default characters and players can walk 
+    // through each other
+    public bool solidForPlayers;
+    
     // determines if character is following another
     protected bool isFollowing;
 
@@ -60,6 +64,18 @@ public abstract class CharacterMovement : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        
+        // ignore collision detection between characters
+        if (!solidForPlayers)
+        {
+            var characters = FindObjectsOfType<CharacterMovement>();
+            foreach (CharacterMovement character in characters)
+            {
+                if (!character.solidForPlayers)
+                Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), character.gameObject.GetComponent<Collider2D>());
+            }
+        }
+        
     }
 
     private void HandleMovingAndNotMovingAnimations()
