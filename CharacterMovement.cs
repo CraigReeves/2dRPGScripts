@@ -216,6 +216,9 @@ public abstract class CharacterMovement : MonoBehaviour
         
         // handle directional movements
         HandleControlOfCharacter();
+        
+        // keep track of running animation
+        anim.SetBool("isRunning", isRunning);
     }
     
     // Setters and Getters
