@@ -20,7 +20,6 @@ public class TreasureChest : EventSequence
     // determine if treasure has been obtained
     public bool treasureObtained()
     {
-        Debug.Log(gameWorld.getObtainedTreasures().Contains(treasure));   
         return gameWorld.getObtainedTreasures().Contains(treasure);
     }
 
@@ -43,7 +42,7 @@ public class TreasureChest : EventSequence
                 stealControl(player);
                 gameWorld.addTreasure(treasure);
                 delay(0.5f);
-                msg("", "Got " + treasure.name);
+                msg("", "Got " + treasure.name, -137f);
                 msgNext();
                 returnControl(player);
             }

@@ -14,10 +14,11 @@ public class BeardedManAppears : EventSequence
         beardedMan = npcs[1];
         woman = npcs[0];
         wanderEvent = FindObjectOfType<Wander>();
+        gameWorld.gameState.Add("initState", "intro");
     }
     
     public override void run()
-    {
+    {        
         stealControl(player);
         remotePause(wanderEvent);
         faceSouth(woman);
@@ -65,7 +66,7 @@ public class BeardedManAppears : EventSequence
         picMsg("Slyvian", "Daughter?", 126, player, 0);
         wait();
         msgClose();
-        msg("Drake", "Lory. Lory Lyon.", 126);
+        msg("Drake", "Tomi. Tomi Lahren.", 126);
         wait();
         msgClose();
         delay(1);
@@ -112,6 +113,6 @@ public class BeardedManAppears : EventSequence
         positionCharacter(beardedMan, 0, 0);
         delay(1.5f);
         returnControl(player);
-        gameWorld.initState = "DrakeArrived";
+        gameWorld.gameState["initState"] = "DrakeArrived";
     }
 }

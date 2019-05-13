@@ -8,15 +8,14 @@ public class GameWorld : MonoBehaviour
     private Vector2 nextDestination;
     private bool autoReturnControl;
     private List<Treasure> obtainedTreasures;
-    
-    // game states
-    public string initState = "intro";
-    
+    public Hashtable gameState;
+        
     // Start is called before the first frame update
     void Start()
     {
         DontDestroyOnLoad(gameObject);      
         obtainedTreasures = new List<Treasure>();
+        gameState = new Hashtable();
     }
 
     public List<Treasure> getObtainedTreasures()

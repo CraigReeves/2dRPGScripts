@@ -16,7 +16,7 @@ public class SampleDialogEvent : EventSequence
     
     public override void run()
     {
-        switch (gameWorld.initState)
+        switch ((string) gameWorld.gameState["initState"])
         {
             case "DrakeArrived":
                 remotePause(exampleEvent);
