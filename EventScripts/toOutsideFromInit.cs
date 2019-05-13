@@ -7,7 +7,9 @@ public class toOutsideFromInit : EventSequence
     
     public override void run()
     {
-        switch (gameWorld.initState)
+        goToScene(262.58f, 257.4f, player, false);
+        
+        /*switch (gameWorld.initState)
         {
             case "intro":
                 stealControl(player);
@@ -22,6 +24,6 @@ public class toOutsideFromInit : EventSequence
             default:
                 goToScene(262.58f, 257.4f, player, false);
                 break;
-        }
+        }*/
     }
 }
