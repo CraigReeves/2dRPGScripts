@@ -6,7 +6,7 @@ public class CameraFollowTest : EventSequence
 {
     public override void run()
     {
-        switch (gameWorld.initState)
+        switch ((string) gameWorld.gameState["initState"])
         {
             case "DrakeArrived":
                 positionCharacter(npcs[0], 269.88f,253.25f);
@@ -33,7 +33,7 @@ public class CameraFollowTest : EventSequence
                 wait();
                 msgClose();
                 changeCameraSpeed(16f);
-                gameWorld.initState = "WaitingOnDrake";
+                gameWorld.gameState["initState"] = "WaitingOnDrake";
                 returnControl(player);
                 break;
             case "WaitingOnDrake":
