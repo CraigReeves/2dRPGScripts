@@ -50,8 +50,7 @@ public abstract class EventSequence : MonoBehaviour
     private bool withinEventZone;
     
     // determines if script runs only once or can be run more than once
-    [SerializeField] 
-    private bool runOnce;
+    public bool runOnce;
     
     // determines if script loops. this automatically disables run once
     [SerializeField] 
@@ -415,6 +414,13 @@ public abstract class EventSequence : MonoBehaviour
         command.setGameObjectParam(character);
         command.setEventSequenceParam(this);
         eventWorker.storeInQueue(command);
+    }
+    
+    // shortcut msg function
+    protected void msgNext()
+    {
+        wait();
+        msgClose();
     }
 
     protected void turnToFace(GameObject character, GameObject reference)
