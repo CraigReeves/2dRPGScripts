@@ -41,14 +41,10 @@ public class SampleDialogEvent : EventSequence
                 stealControl(player);
                 turnToFace(npc, player);
                 msg("Woman", "Hi there!");
-                wait();
-                msg("Woman", "Unity is awesome, isn't it?");
-                wait();
+                msgNext();
+                promptWin("What do you want to do?", "Go Out", "Stay Home", "Write Music");
+                waitForPrompt();
                 msgClose();
-                picMsg("Sylvian", "Yeah. I'm definitely having too much fun with it, that's for sure!", player, 0);
-                wait();
-                msgClose();
-                remoteResumeSeq(exampleEvent);
                 returnControl(player);
                 break;
         }

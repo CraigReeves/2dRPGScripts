@@ -49,6 +49,9 @@ public abstract class EventSequence : MonoBehaviour
     // determines if player is making contact with event's collision box
     private bool withinEventZone;
     
+    // for prompt window
+    protected int promptOption = 1;
+    
     // determines if script runs only once or can be run more than once
     public bool runOnce;
     
@@ -214,6 +217,11 @@ public abstract class EventSequence : MonoBehaviour
         {
             withinEventZone = false;
         }
+    }
+
+    public void setPromptOption(int setting)
+    {
+        promptOption = setting;
     }
 
     
@@ -415,6 +423,15 @@ public abstract class EventSequence : MonoBehaviour
         command.setEventSequenceParam(this);
         eventWorker.storeInQueue(command);
     }
+
+    protected void promptWin(params string[] parameters)
+    {
+        var command = newCom();
+        command.setName("promptWin");
+        command.setStringParams(parameters);
+        command.setDialogManagerParam(dialogManager);
+        eventWorker.storeInQueue(command);
+    }
     
     // shortcut msg function
     protected void msgNext()
@@ -550,6 +567,24 @@ public abstract class EventSequence : MonoBehaviour
         Command command = newCom();
         command.setName("wait");
         command.setEventWorkerParam(eventWorker);
+        eventWorker.storeInQueue(command);
+    }
+
+    protected void waitForPrompt()
+    {
+        // clear directional buffer for all characters
+        player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        
+        foreach (var npc in npcs)
+        {
+            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
+        }
+
+        Command command = newCom();
+        command.setName("waitForPrompt");
+        command.setEventSequenceParam(this);
+        command.setEventWorkerParam(eventWorker);
+        command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }
     

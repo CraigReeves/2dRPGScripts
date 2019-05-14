@@ -11,6 +11,12 @@ public class DialogManager : MonoBehaviour
     public Text dialogText;
     public Text picNameText;
     public Text picDialogText;
+    public Text promptHeadingText;
+    public Text promptOption1;
+    public Text promptOption2;
+    public Text promptOption3;
+    public Text promptOption4;
+    public RectTransform promptCursor;
     public Animator dialogBoxAnimator;
     public Animator picDialogBoxAnimator;
     private RectTransform messageWindow;
@@ -20,11 +26,28 @@ public class DialogManager : MonoBehaviour
     private Queue<string> sentences;
     private bool isRunning;
 
+    // for prompt window
+    private Animator promptAnimator;
+    public Vector3 promptCursorPos1;
+    public Vector3 promptCursorPos2;
+    public Vector3 promptCursorPos3;
+    public Vector3 promptCursorPos4;
+    public int currentPick;
+    public int numOfOptions = 2;
+
     public void Start()
     {
         messageWindow = GameObject.Find("MessageWindow").GetComponent<RectTransform>();
         picMessageWindow = GameObject.Find("PicMessageWindow").GetComponent<RectTransform>();
         picImageAvatar = GameObject.Find("MsgAvatar").GetComponent<Image>();
+        promptAnimator = GameObject.Find("PromptWindow").GetComponent<Animator>();
+        promptCursor = GameObject.Find("PromptCursor").GetComponent<RectTransform>();
+        
+        promptCursorPos1 = new Vector3(-143.5f, -2f, 0);
+        promptCursorPos2 = new Vector3(-143.5f, -22.9f, 0);
+        promptCursorPos3 = new Vector3(-32.5f, -2f, 0);
+        promptCursorPos4 = new Vector3(-32.5f, -22.9f, 0);
+        currentPick = 1;
     }
 
     public void dialog(string name, string message)
@@ -87,6 +110,24 @@ public class DialogManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(picTypeSentence(message));
     }
+
+    public void promptDialog(string heading, params string[] options)
+    {
+        if (!isRunning)
+        {
+            isRunning = true;
+            
+            promptAnimator.SetBool("promptOpen", true);
+            numOfOptions = options.Length;
+            promptCursor.localPosition = promptCursorPos1;
+            
+            promptHeadingText.text = heading;
+            promptOption1.text = options[0];
+            promptOption2.text = options[1];
+            promptOption3.text = numOfOptions >= 3 ? options[2] : null;
+            promptOption4.text = numOfOptions >= 4 ? options[3] : null;
+        }
+    }
     
     private IEnumerator typeSentence(string sentence)
     {
@@ -122,6 +163,18 @@ public class DialogManager : MonoBehaviour
         isRunning = false;
         picNameText.text = "";
         picDialogText.text = "";
+    }
+    
+    public void endPromptDialog()
+    {
+        promptAnimator.SetBool("promptOpen", false);
+        isRunning = false;
+        promptHeadingText.text = "";
+        promptOption1.text = "";
+        promptOption2.text = "";
+        promptOption3.text = "";
+        promptOption4.text = "";
+        currentPick = 1;
     }
 
     public bool getIsRunning()

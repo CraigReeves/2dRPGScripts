@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEditor;
@@ -171,6 +172,35 @@ public class EventEngine : MonoBehaviour
         {
             var dm = command.getDialogManagerParam();
             return msgClose(dm);
+        }
+
+        if (commandName == "promptWin")
+        {
+            var dm = command.getDialogManagerParam();
+            var headerText = command.getStringParameters()[0];
+            
+            if (command.getStringParameters().Length < 4)
+            {
+                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2]);
+            }
+            
+            if (command.getStringParameters().Length == 4)
+            {
+                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3]);
+            }
+            
+            if (command.getStringParameters().Length == 5)
+            {
+                return promptWin(dm, headerText, command.getStringParameters()[1], command.getStringParameters()[2], command.getStringParameters()[3], command.getStringParameters()[4]);
+            }
+        }
+
+        if (commandName == "waitForPrompt")
+        {
+            var dm = command.getDialogManagerParam();
+            var es = command.getEventSequenceParam();
+            var ew = command.getEventWorkerParameter();
+            return waitForPrompt(dm, es, ew);
         }
 
         if (commandName == "wait")
@@ -694,6 +724,7 @@ public class EventEngine : MonoBehaviour
     {
         dm.endDialog();
         dm.endPicDialog();
+        dm.endPromptDialog();
         return !dm.getIsRunning();
     }
     
@@ -763,5 +794,85 @@ public class EventEngine : MonoBehaviour
     {
         camera.setCamSpeed(newSpeed);
         return true;
+    }
+
+    private bool promptWin(DialogManager dm, string headerText, params string[] options)
+    {
+        dm.promptDialog(headerText, options);
+        return true;
+    }
+
+    private bool waitForPrompt(DialogManager dm, EventSequence es, EventWorker ew)
+    {
+        var promptCursor = dm.promptCursor;
+        var promptCursorPos1 = dm.promptCursorPos1;
+        var promptCursorPos2 = dm.promptCursorPos2;
+        var promptCursorPos3 = dm.promptCursorPos3;
+        var promptCursorPos4 = dm.promptCursorPos4;
+        var numOfOptions = dm.numOfOptions;
+        
+        // allow cursor to move 
+        if (dm.currentPick == 1)
+        {
+            if (Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                promptCursor.localPosition = promptCursorPos2;
+                dm.currentPick = 2;
+            } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 3)
+            {
+                promptCursor.localPosition = promptCursorPos3;
+                dm.currentPick = 3;
+            }
+        }
+    
+        if (dm.currentPick == 2)
+        {
+            if (Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                promptCursor.localPosition = promptCursorPos1;
+                dm.currentPick = 1;
+            } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 4)
+            {
+                promptCursor.localPosition = promptCursorPos4;
+                dm.currentPick = 4;
+            }
+        }
+            
+        if (dm.currentPick == 3)
+        {
+            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                promptCursor.localPosition = promptCursorPos1;
+                dm.currentPick = 1;
+            } else if (Input.GetKeyUp(KeyCode.DownArrow) && numOfOptions >= 4)
+            {
+                promptCursor.localPosition = promptCursorPos4;
+                dm.currentPick = 4;
+            }
+        }
+            
+        if (dm.currentPick == 4)
+        {
+            if (Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                promptCursor.localPosition = promptCursorPos3;
+                dm.currentPick = 3;
+            } else if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                promptCursor.localPosition = promptCursorPos2;
+                dm.currentPick = 2;
+            }
+        }
+        
+        // allow choice
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            // store in chosen option
+            es.setPromptOption(dm.currentPick);
+            return true;
+        }
+        
+        // do not move on until an option has been chosen
+        return false;
     }
 }

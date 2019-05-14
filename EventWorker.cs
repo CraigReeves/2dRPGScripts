@@ -45,7 +45,7 @@ public class EventWorker : MonoBehaviour
 
     void workCommand(Command command)
     {
-        // get name and run method
+        // run method
         if (eventEngine.start(command))
         {
             // move to next command
