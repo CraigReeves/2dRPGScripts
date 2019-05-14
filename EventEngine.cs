@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Experimental.UIElements;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EventEngine : MonoBehaviour
@@ -20,6 +14,8 @@ public class EventEngine : MonoBehaviour
     private GoToScene gts;
     private CameraController camera;
     private GameWorld gameWorld;
+    private bool promptRunning;
+    private int currentPick = 1;
 
     public bool start(Command command)
     {        
@@ -198,9 +194,8 @@ public class EventEngine : MonoBehaviour
         if (commandName == "waitForPrompt")
         {
             var dm = command.getDialogManagerParam();
-            var es = command.getEventSequenceParam();
-            var ew = command.getEventWorkerParameter();
-            return waitForPrompt(dm, es, ew);
+            var callback = command.getCallbackParam();
+            return waitForPrompt(dm, callback);
         }
 
         if (commandName == "wait")
@@ -802,8 +797,9 @@ public class EventEngine : MonoBehaviour
         return true;
     }
 
-    private bool waitForPrompt(DialogManager dm, EventSequence es, EventWorker ew)
+    private bool waitForPrompt(DialogManager dm, EventSequence.PromptCallback callback)
     {
+     
         var promptCursor = dm.promptCursor;
         var promptCursorPos1 = dm.promptCursorPos1;
         var promptCursorPos2 = dm.promptCursorPos2;
@@ -811,64 +807,74 @@ public class EventEngine : MonoBehaviour
         var promptCursorPos4 = dm.promptCursorPos4;
         var numOfOptions = dm.numOfOptions;
         
+        // initialize cursor position
+        if (!promptRunning)
+        {
+            currentPick = 1;
+            promptRunning = true;
+        }
+        
         // allow cursor to move 
-        if (dm.currentPick == 1)
+        if (currentPick == 1)
         {
             if (Input.GetKeyUp(KeyCode.DownArrow))
             {
                 promptCursor.localPosition = promptCursorPos2;
-                dm.currentPick = 2;
+                currentPick = 2;
             } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 3)
             {
                 promptCursor.localPosition = promptCursorPos3;
-                dm.currentPick = 3;
+                currentPick = 3;
             }
         }
     
-        if (dm.currentPick == 2)
+        if (currentPick == 2)
         {
             if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 promptCursor.localPosition = promptCursorPos1;
-                dm.currentPick = 1;
+                currentPick = 1;
             } else if (Input.GetKeyUp(KeyCode.RightArrow) && numOfOptions >= 4)
             {
                 promptCursor.localPosition = promptCursorPos4;
-                dm.currentPick = 4;
+                currentPick = 4;
             }
         }
             
-        if (dm.currentPick == 3)
+        if (currentPick == 3)
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 promptCursor.localPosition = promptCursorPos1;
-                dm.currentPick = 1;
+                currentPick = 1;
             } else if (Input.GetKeyUp(KeyCode.DownArrow) && numOfOptions >= 4)
             {
                 promptCursor.localPosition = promptCursorPos4;
-                dm.currentPick = 4;
+                currentPick = 4;
             }
         }
             
-        if (dm.currentPick == 4)
+        if (currentPick == 4)
         {
             if (Input.GetKeyUp(KeyCode.UpArrow))
             {
                 promptCursor.localPosition = promptCursorPos3;
-                dm.currentPick = 3;
+                currentPick = 3;
             } else if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 promptCursor.localPosition = promptCursorPos2;
-                dm.currentPick = 2;
+                currentPick = 2;
             }
         }
         
         // allow choice
         if (Input.GetKeyUp(KeyCode.Return))
         {
-            // store in chosen option
-            es.setPromptOption(dm.currentPick);
+            dm.endPromptDialog();
+            promptRunning = false;
+            
+            // run callback 
+            callback(currentPick);
             return true;
         }
         

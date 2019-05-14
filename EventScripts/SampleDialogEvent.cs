@@ -41,12 +41,53 @@ public class SampleDialogEvent : EventSequence
                 stealControl(player);
                 turnToFace(npc, player);
                 msg("Woman", "Hi there!");
+                wait();
+                msg("Woman", "Unity is cool, isn't it?");
                 msgNext();
-                promptWin("What do you want to do?", "Go Out", "Stay Home", "Write Music");
-                waitForPrompt();
-                msgClose();
-                returnControl(player);
+                picMsg("Slyvian", "Definitely! It's great!", player, 0);
+                msgNext();
+                msg("Woman", "Do you want to dance?");
+                msgNext();
+                wannaDance(); // give player choice to dance
                 break;
+        }
+
+        void wannaDance()
+        {
+            promptWin("Dance with Martha?", "Sure", "Nope", "Maybe Later", "I don't even know you!");
+            waitForPrompt((result) =>
+            {
+                switch (result)
+                {
+                    default:
+                        msg("Woman", "Oh cool! I knew you thought I was too cute \nto pass up!");
+                        msgNext();
+                        returnControl(player);
+                        remoteResumeSeq(exampleEvent);
+                        break;
+                    case 2:
+                        msg("Woman", "That's fine. Whatever.");
+                        msgNext();
+                        returnControl(player);
+                        remoteResumeSeq(exampleEvent);
+                        break;
+                    case 3:
+                        msg("Woman", "No problem. Lemme know when.");
+                        msgNext();
+                        returnControl(player);
+                        remoteResumeSeq(exampleEvent);
+                        break;
+                    case 4:
+                        msg("Woman", "Uh, dude...");
+                        wait();
+                        msg("Woman", "I don't know if it's dawned on you, but \nI don't know you either.");
+                        wait();
+                        msg("Woman", "The point of a singles situation for people who don't know each other to do so.");
+                        msgNext();
+                        wannaDance();
+                        break;
+                }
+            });
         }
     }
 }

@@ -62,6 +62,9 @@ public abstract class EventSequence : MonoBehaviour
     // determines if auto trigger is on, automatically disabling run once and activate on return
     [SerializeField]
     private bool autoTrigger;
+
+    // function callback for prompt window
+    public delegate void PromptCallback(int choice);
     
     protected void Start()
     {
@@ -570,7 +573,7 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
-    protected void waitForPrompt()
+    protected void waitForPrompt(PromptCallback callback)
     {
         // clear directional buffer for all characters
         player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
@@ -582,8 +585,7 @@ public abstract class EventSequence : MonoBehaviour
 
         Command command = newCom();
         command.setName("waitForPrompt");
-        command.setEventSequenceParam(this);
-        command.setEventWorkerParam(eventWorker);
+        command.setCallbackParam(callback);
         command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }

@@ -32,7 +32,6 @@ public class DialogManager : MonoBehaviour
     public Vector3 promptCursorPos2;
     public Vector3 promptCursorPos3;
     public Vector3 promptCursorPos4;
-    public int currentPick;
     public int numOfOptions = 2;
 
     public void Start()
@@ -47,7 +46,6 @@ public class DialogManager : MonoBehaviour
         promptCursorPos2 = new Vector3(-143.5f, -22.9f, 0);
         promptCursorPos3 = new Vector3(-32.5f, -2f, 0);
         promptCursorPos4 = new Vector3(-32.5f, -22.9f, 0);
-        currentPick = 1;
     }
 
     public void dialog(string name, string message)
@@ -174,7 +172,6 @@ public class DialogManager : MonoBehaviour
         promptOption2.text = "";
         promptOption3.text = "";
         promptOption4.text = "";
-        currentPick = 1;
     }
 
     public bool getIsRunning()

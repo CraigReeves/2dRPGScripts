@@ -19,6 +19,7 @@ public class Command : ScriptableObject
     private EventSequence eventSequenceParam;
     private DialogManager dialogManagerParam;
     private Scene sceneParam;
+    private EventSequence.PromptCallback callbackParam;
 
     public void setName(string name)
     {
@@ -65,6 +66,16 @@ public class Command : ScriptableObject
     public void setSceneParam(Scene scene)
     {
         sceneParam = scene;
+    }
+
+    public EventSequence.PromptCallback getCallbackParam()
+    {
+        return callbackParam;
+    }
+
+    public void setCallbackParam(EventSequence.PromptCallback callback)
+    {
+        callbackParam = callback;
     }
     
     public void setFloatParams(params float[] parameters)
