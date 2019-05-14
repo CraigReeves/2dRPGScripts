@@ -115,7 +115,7 @@ public class DialogManager : MonoBehaviour
         {
             isRunning = true;
             
-            promptAnimator.SetBool("promptOpen", true);
+            promptAnimator.SetFloat("isOpen", 1.0f);
             numOfOptions = options.Length;
             promptCursor.localPosition = promptCursorPos1;
             
@@ -165,7 +165,7 @@ public class DialogManager : MonoBehaviour
     
     public void endPromptDialog()
     {
-        promptAnimator.SetBool("promptOpen", false);
+        promptAnimator.SetFloat("isOpen", -1.0f);
         isRunning = false;
         promptHeadingText.text = "";
         promptOption1.text = "";
