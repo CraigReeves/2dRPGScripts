@@ -35,7 +35,7 @@ public class PlayerFollow : MonoBehaviour
         }
         else
         {
-            cm.clearDirectionalBuffer(10);
+            cm.clearDirectionalBuffer(5);
         }
     }
 
