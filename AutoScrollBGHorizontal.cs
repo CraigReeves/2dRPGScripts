@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BGScroll : MonoBehaviour
+public class AutoScrollBGHorizontal : MonoBehaviour
 {
     private Vector3 startPOS;
     public float speed;
@@ -23,11 +23,11 @@ public class BGScroll : MonoBehaviour
 
         if (!scrollBackwards)
         {
-            loopBackPos = orig1Pos - (differencePos + differencePos / 2);
+            loopBackPos = orig1Pos - differencePos;
         }
         else
         {
-            loopBackPos = orig2Pos + (differencePos + differencePos / 2);
+            loopBackPos = orig2Pos + differencePos;
         }
     }
 
