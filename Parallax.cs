@@ -7,7 +7,7 @@ public class Parallax : MonoBehaviour
     private Transform cam;
     public Transform[] layers;
     private float[] parallaxScales;
-    public float amount = 1.1f;
+    public float amount = 2f;
     private Vector3 previousCamPos;
 
     void Awake()
@@ -25,6 +25,7 @@ public class Parallax : MonoBehaviour
         for (var i = 0; i < parallaxScales.Length; i++)
         {
             parallaxScales[i] = layers[i].position.z * -1;
+            
         }
         
     }
