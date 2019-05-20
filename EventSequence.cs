@@ -725,4 +725,28 @@ public abstract class EventSequence : MonoBehaviour
         command.setFloatParams(speed);
         eventWorker.storeInQueue(command);
     }
+
+    protected void setRain(bool setting, bool darkenScene)
+    {
+        Command command = newCom();
+        command.setName("setRain");
+        command.setBoolParams(setting, darkenScene);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void setFog(bool setting)
+    {
+        Command command = newCom();
+        command.setName("setFog");
+        command.setBoolParams(setting);
+        eventWorker.storeInQueue(command);
+    }
+    
+    protected void setSnow(bool setting)
+    {
+        Command command = newCom();
+        command.setName("setSnow");
+        command.setBoolParams(setting);
+        eventWorker.storeInQueue(command);
+    }
 }

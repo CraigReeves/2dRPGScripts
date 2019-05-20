@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EventEngine : MonoBehaviour
@@ -16,12 +16,14 @@ public class EventEngine : MonoBehaviour
     private GameWorld gameWorld;
     private bool promptRunning;
     private int currentPick = 1;
-
+    private Weather weather;
+    
     public bool start(Command command)
     {        
         var commandName = command.getName();
         gts = FindObjectOfType<GoToScene>();
         gameWorld = FindObjectOfType<GameWorld>();
+        weather = FindObjectOfType<Weather>();
 
         camera = FindObjectOfType<CameraController>();
 
@@ -338,6 +340,43 @@ public class EventEngine : MonoBehaviour
             return autoMove(cm, "SW", distance, true);
         }
 
+        if (commandName == "setRain")
+        {
+            var setting = command.getBoolParameters()[0];
+            var darken = command.getBoolParameters()[1];
+            return setRain(setting, darken);
+        }
+        
+        if (commandName == "setSnow")
+        {
+            var setting = command.getBoolParameters()[0];
+            return setSnow(setting);
+        }
+        
+        if (commandName == "setFog")
+        {
+            var setting = command.getBoolParameters()[0];
+            return setFog(setting);
+        }
+
+        return true;
+    }
+
+    private bool setRain(bool setting, bool darkenScene)
+    {
+        weather.setRain(setting, darkenScene);
+        return true;
+    }
+    
+    private bool setSnow(bool setting)
+    {
+        weather.setSnow(setting);
+        return true;
+    }
+    
+    private bool setFog(bool setting)
+    {
+        weather.setFog(setting);
         return true;
     }
     
