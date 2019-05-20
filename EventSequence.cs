@@ -121,6 +121,9 @@ public abstract class EventSequence : MonoBehaviour
         if (autoTrigger || eventActivated)
         {
             if (sequenceSendComplete) return;
+
+            // still looping...
+            if (loop && eventWorker.numberOfEventsInQueue() > 0) return;
             
             run();
         
