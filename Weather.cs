@@ -95,6 +95,30 @@ public class Weather : MonoBehaviour
             rainRate = Mathf.MoveTowards(rainRate, 0, t * (transitionSpeed / 4));
         }
         
+        // handle beginning snow
+        if (isSnowing)
+        {
+            var t = Time.time - startTime;
+            snowRate = Mathf.MoveTowards(snowRate, 250f, t * transitionSpeed);
+        }
+        else
+        {
+            var t = Time.time - startTime;
+            snowRate = Mathf.MoveTowards(snowRate, 0, t * (transitionSpeed / 4));
+        }
+        
+        // handle beginning fog
+        if (isFogging)
+        {
+            var t = Time.time - startTime;
+            fogRate = Mathf.MoveTowards(fogRate, 10f, t * transitionSpeed);
+        }
+        else
+        {
+            var t = Time.time - startTime;
+            fogRate = Mathf.MoveTowards(fogRate, 0, t * (transitionSpeed / 4));
+        }
+        
         // maintain emissions
         rainEmission.rateOverTime = rainRate;
         snowEmission.rateOverTime = snowRate;
@@ -112,11 +136,15 @@ public class Weather : MonoBehaviour
     
     public void setSnow(bool setting)
     {
-        snow.gameObject.SetActive(setting);
+        startTime = Time.time;
+        snow.gameObject.SetActive(true);
+        isSnowing = setting;
     }
 
     public void setFog(bool setting)
     {
-        fog.gameObject.SetActive(setting);
+        startTime = Time.time;
+        fog.gameObject.SetActive(true);
+        isFogging = setting;
     }
 }

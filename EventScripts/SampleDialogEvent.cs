@@ -54,7 +54,7 @@ public class SampleDialogEvent : EventSequence
 
         void wannaDance()
         {
-            promptWin("Dance with Martha?", "Sure", "Nope", "Make it Rain!", "I don't even know you!");
+            promptWin("Dance with Martha?", "Sure", "Nope", "Make it Snow!", "I don't even know you!");
             waitForPrompt((result) =>
             {
                 switch (result)
@@ -74,7 +74,7 @@ public class SampleDialogEvent : EventSequence
                     case 3:
                         msg("Woman", "No problem!");
                         msgNext();
-                        setRain(true, true);
+                        setSnow(true);
                         setFog(true);
                         returnControl(player);
                         remoteResumeSeq(exampleEvent);
