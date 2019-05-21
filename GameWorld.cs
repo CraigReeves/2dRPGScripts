@@ -6,6 +6,10 @@ public class GameWorld : MonoBehaviour
 {
     
     private Vector2 nextDestination;
+    public bool nextRain;
+    public bool nextSnow;
+    public bool nextFog;
+    public bool nextDarkness;
     private bool autoReturnControl;
     private List<Treasure> obtainedTreasures;
     public Hashtable gameState;

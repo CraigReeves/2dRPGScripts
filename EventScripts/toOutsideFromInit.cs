@@ -20,6 +20,7 @@ public class toOutsideFromInit : EventSequence
                 goToScene(262.58f, 257.4f, player, true);
                 break;
             default:
+                setNextWeather(true, false, true, true);
                 goToScene(262.58f, 257.4f, player, false);
                 break;
         }

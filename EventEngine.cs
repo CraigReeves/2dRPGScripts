@@ -359,12 +359,33 @@ public class EventEngine : MonoBehaviour
             return setFog(setting);
         }
 
+        if (commandName == "setNextWeather")
+        {
+            var rain = command.getBoolParameters()[0];
+            var snow = command.getBoolParameters()[1];
+            var fog = command.getBoolParameters()[2];
+            var darkness = command.getBoolParameters()[3];
+            return setNextWeather(rain, snow, fog, darkness);
+        }
+
         return true;
     }
+    
+    /* ----------------------------------------------------------------------------------------------------------*/
 
     private bool setRain(bool setting, bool darkenScene)
     {
         weather.setRain(setting, darkenScene);
+        return true;
+    }
+
+    private bool setNextWeather(bool rain, bool snow, bool fog, bool darkness)
+    {
+        gameWorld.nextRain = rain;
+        gameWorld.nextFog = fog;
+        gameWorld.nextSnow = snow;
+        gameWorld.nextDarkness = darkness;
+
         return true;
     }
     

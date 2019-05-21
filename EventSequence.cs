@@ -693,6 +693,13 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
 
+    protected void setNextWeather(bool rain, bool snow, bool fog, bool darkness)
+    {      
+        Command command = newCom();
+        command.setName("setNextWeather");
+        command.setBoolParams(rain, snow, fog, darkness);
+        eventWorker.storeInQueue(command);
+    }
     
     // hide and show characters
     
