@@ -10,18 +10,18 @@ public class toOutsideFromInit : EventSequence
         switch ((string) gameWorld.gameState["initState"])
         {
             case "intro":
-                stealControl(player);
-                picMsg("Slyvian", "Maybe I should at least speak to the lady.", 126, player, 0);
+                stealControl(player());
+                picMsg("Slyvian", "Maybe I should at least speak to the lady.", 126, player(), 0);
                 wait();
                 msgClose();
-                returnControl(player);
+                returnControl(player());
                 break;
             case "DrakeArrived":
-                goToScene(262.58f, 257.4f, player, true);
+                goToScene(262.58f, 257.4f, player(), true);
                 break;
             default:
                 setNextWeather(true, false, true, true);
-                goToScene(262.58f, 257.4f, player, false);
+                goToScene(262.58f, 257.4f, player(), false);
                 break;
         }
     }

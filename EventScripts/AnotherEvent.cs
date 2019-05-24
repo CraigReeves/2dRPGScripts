@@ -16,9 +16,9 @@ public class AnotherEvent : EventSequence
     public override void run()
     {
         remotePause(exampleEvent);
-        walkEast(player, 2f);
-        walkNorth(player, 2f);
-        returnControl(player);
+        walkEast(player(), 2f);
+        walkNorth(player(), 2f);
+        returnControl(player());
         remoteResumeSeq(exampleEvent);
     }
 }

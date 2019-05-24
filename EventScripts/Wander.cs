@@ -7,7 +7,7 @@ using Random = System.Random;
 public class Wander : EventSequence
 {
 
-    private GameObject npc;
+    private CharacterMovement npc;
     private Random r;
     
     // Start is called before the first frame update

@@ -795,7 +795,6 @@ public class EventEngine : MonoBehaviour
         gts.setAsEvent(partOfSequence);
         gameWorld.setAutoReturnControl(!partOfSequence);
         gts.setPosition(x, y);
-        gts.setPlayer(player.GetComponent<CharacterMovement>());
         gts.go();
 
         return true;

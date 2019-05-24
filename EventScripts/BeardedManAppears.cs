@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BeardedManAppears : EventSequence
 {
-    private GameObject beardedMan;
-    private GameObject woman;
+    private CharacterMovement beardedMan;
+    private CharacterMovement woman;
     private Wander wanderEvent;
     
     public void Start()
@@ -19,12 +19,12 @@ public class BeardedManAppears : EventSequence
     
     public override void run()
     {        
-        stealControl(player);
+        stealControl(player());
         remotePause(wanderEvent);
         faceSouth(woman);
-        faceSouth(player);
+        faceSouth(player());
         delay(1);
-        picMsg("Slyvian", "Who is that?", player, 0);
+        picMsg("Slyvian", "Who is that?", player(), 0);
         wait();
         msgClose();
         msg("Woman", "No clue.");
@@ -43,45 +43,45 @@ public class BeardedManAppears : EventSequence
         wait();
         msgClose();
         delay(1);
-        faceNorth(player);
-        picMsg("Slyvian", "Martha, who is this?", 126, player, 0);
+        faceNorth(player());
+        picMsg("Slyvian", "Martha, who is this?", 126, player(), 0);
         wait();
-        picMsg("Slyvian", "Surely, you wouldn't let just \nany-old-body up in your house!", 126, player, 0);
+        picMsg("Slyvian", "Surely, you wouldn't let just \nany-old-body up in your house!", 126, player(), 0);
         wait();
         msgClose();
         msg("Woman", "Hey man, don't look at me. I have no clue who he is.", -137);
         wait();
         msgClose();
-        faceSouth(player);
+        faceSouth(player());
         msg("Man", "If you must know, my name is Drake.", 126);
         wait();
         msg("Drake", "You happen to know of my daughter...", 126);
         wait();
         msgClose();
         delay(1);
-        faceNorth(player);
+        faceNorth(player());
         delay(1);
-        faceSouth(player);
+        faceSouth(player());
         delay(1);
-        picMsg("Slyvian", "Daughter?", 126, player, 0);
+        picMsg("Slyvian", "Daughter?", 126, player(), 0);
         wait();
         msgClose();
         msg("Drake", "Tomi. Tomi Lahren.", 126);
         wait();
         msgClose();
         delay(1);
-        faceNorth(player);
+        faceNorth(player());
         delay(1);
-        faceSouth(player);
-        picMsg("Slyvian", "Sir, I...", 126, player, 0);
+        faceSouth(player());
+        picMsg("Slyvian", "Sir, I...", 126, player(), 0);
         wait();
         msgClose();
         msg("Drake", "Save it. She told me everything.", 126);
         wait();
         msgClose();
-        picMsg("Slyvian", "This isn't what you think!", 126, player, 0);
+        picMsg("Slyvian", "This isn't what you think!", 126, player(), 0);
         wait();
-        picMsg("Slyvian", "Whether you want to hear this or not, \nyour daughter is lying to you!", 126, player, 0);
+        picMsg("Slyvian", "Whether you want to hear this or not, \nyour daughter is lying to you!", 126, player(), 0);
         wait();
         msgClose();
         msg("Drake", "I can assure you that calling my one and only \ndaughter a liar is absolutely NOT going to help \nyou right now.", 126);
@@ -102,7 +102,7 @@ public class BeardedManAppears : EventSequence
         msg("Drake", "But have it your way. You wanna take this \noutside then, Slyvian?", 126);
         wait();
         msgClose();
-        picMsg("Slyvian", "I have no problem with that!", 126, player, 0);
+        picMsg("Slyvian", "I have no problem with that!", 126, player(), 0);
         wait();
         msgClose();
         msg("Drake", "Good. I'll be waiting.", 126);
@@ -112,7 +112,7 @@ public class BeardedManAppears : EventSequence
         hideCharacter(beardedMan);
         positionCharacter(beardedMan, 0, 0);
         delay(1.5f);
-        returnControl(player);
+        returnControl(player());
         gameWorld.gameState["initState"] = "DrakeArrived";
     }
 }

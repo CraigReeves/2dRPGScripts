@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExampleEvent : EventSequence
 {
-    private GameObject npc;
+    private CharacterMovement npc;
     
     // Start is called before the first frame update
     void Start()

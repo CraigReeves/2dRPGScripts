@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GoToScene : MonoBehaviour
 {
-    private CharacterMovement character;
     private Scene levelToLoad;
     private Vector2 position;
     private GameWorld gameWorld;
@@ -16,21 +15,15 @@ public class GoToScene : MonoBehaviour
     {
         gameWorld = FindObjectOfType<GameWorld>();
         faderAnim = GameObject.Find("FaderImage").GetComponent<Animator>();
-        
-        // assign a CM if one isn't already there
-        if (character == null)
-        {
-            character = FindObjectOfType<PlayerMovement>();
-        }
     }
     
     public void go()
     {
-        if (character.isUnderPlayerControl() || isEvent)
+        if (gameWorld.partyLeader().isUnderPlayerControl() || isEvent)
         {
-            character.setControlOverride(true);
+            gameWorld.partyLeader().setControlOverride(true);
             faderAnim.SetTrigger("fade_out");
-            character.clearDirectionalBuffer();
+            gameWorld.partyLeader().clearDirectionalBuffer();
             
             gameWorld.setNextDestination(position.x, position.y);         
         }
@@ -51,27 +44,17 @@ public class GoToScene : MonoBehaviour
         position = new Vector2(x, y);
     }
 
-    public void setPlayer(CharacterMovement cm)
-    {
-        character = cm;
-    }
-
-    public CharacterMovement getPlayer()
-    {
-        return character;
-    }
-
     public void fadeInComplete()
     {
         if (gameWorld.getAutoReturnControl())
         {
-            character.setControlOverride(false);  
+            gameWorld.partyLeader().setControlOverride(false);  
         }
     }
 
     public void loadScene()
     {
-        character.setControlOverride(true);
+        gameWorld.partyLeader().setControlOverride(true);
         SceneManager.LoadScene(levelToLoad.handle);
     }
 }

@@ -28,7 +28,7 @@ public class Waypoint : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D other)
     {
-        if (goToScene.getPlayer().isUnderPlayerControl())
+        if (gameWorld.partyLeader().isUnderPlayerControl())
         {
             goToScene.setPosition(position.x, position.y);
             goToScene.setLevelToLoad(levelToLoad);

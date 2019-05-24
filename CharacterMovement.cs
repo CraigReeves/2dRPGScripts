@@ -71,7 +71,6 @@ public abstract class CharacterMovement : MonoBehaviour
                 Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), character.gameObject.GetComponent<Collider2D>());
             }
         }
-        
     }
 
     private void HandleMovingAndNotMovingAnimations()
@@ -120,6 +119,11 @@ public abstract class CharacterMovement : MonoBehaviour
         
         anim.SetFloat("MoveX", dirX);
         anim.SetFloat("MoveY", dirY);
+    }
+
+    public void setFollowTarget(CharacterMovement target)
+    {
+        GetComponent<PlayerFollow>().target = target;
     }
     
     protected void FixedUpdate()

@@ -39,20 +39,20 @@ public class TreasureChest : EventSequence
         {
             if (!treasureObtained())
             {
-                stealControl(player);
+                stealControl(player());
                 gameWorld.addTreasure(treasure);
                 delay(0.5f);
                 msg("", "Got " + treasure.name, -137f);
                 msgNext();
-                returnControl(player);
+                returnControl(player());
             }
         }
         else
         {
-            stealControl(player);
+            stealControl(player());
             msg("", "Locked.");
             msgNext();
-            returnControl(player);
+            returnControl(player());
         }
     }
     
