@@ -64,6 +64,21 @@ public abstract class EventSequence : MonoBehaviour
     {
         return gameWorld.partyLeader();
     }
+
+    protected PlayerMovement player(string playerName)
+    {
+        // go through party and find correct player
+        PlayerMovement foundPlayer = player();
+        
+        foreach (var player in gameWorld.party)
+        {
+            if (player.name != playerName) continue;
+
+            foundPlayer = player;
+        }
+
+        return foundPlayer;
+    }
     
     protected void Start()
     {

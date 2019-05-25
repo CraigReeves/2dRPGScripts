@@ -35,7 +35,7 @@ public class GameWorld : MonoBehaviour
         }
     }
 
-    private void initializeParty()
+    public void initializeParty()
     {
         // remove control from all but the first player
         for (var i = 0; i < party.Length; i++)
