@@ -403,6 +403,13 @@ public class EventEngine : MonoBehaviour
     
     private bool stealControl(CharacterMovement cm)
     {
+        // shut off follow for all players
+        foreach (var player in gameWorld.party)
+        {
+            player.setControlOverride(true);
+            player.setIsFollowing(false);
+        }
+        
         cm.setControlOverride(true);
         return !cm.isUnderPlayerControl();
     }
@@ -411,6 +418,7 @@ public class EventEngine : MonoBehaviour
     {
         cm.setControlOverride(false);
         es.updateWithinZone(cm.gameObject);
+        gameWorld.initializeParty();
         return cm.isUnderPlayerControl();
     }
     
@@ -795,7 +803,6 @@ public class EventEngine : MonoBehaviour
         gts.setAsEvent(partOfSequence);
         gameWorld.setAutoReturnControl(!partOfSequence);
         gts.setPosition(x, y);
-        gts.setPlayer(player.GetComponent<CharacterMovement>());
         gts.go();
 
         return true;

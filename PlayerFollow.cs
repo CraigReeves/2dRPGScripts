@@ -13,29 +13,34 @@ public class PlayerFollow : MonoBehaviour
     void Start()
     {
         cm = GetComponent<CharacterMovement>();
-        cm.setIsFollowing(true);
         target = target == null ? FindObjectOfType<PlayerMovement>() : target;
         cm.setMoveSpeed(target.getMoveSpeed()); 
     }
     
     void Update()
     {
-        targetPos = new Vector2(target.transform.position.x, target.transform.position.y);
-        pos = new Vector2(transform.position.x, transform.position.y);        
-        angle = Math.Abs(Math.Atan2(pos.y - targetPos.y, pos.x - targetPos.x) * 180f / Math.PI); 
+        if (cm.getIsFollowing())
+        {
+            targetPos = new Vector2(target.transform.position.x, target.transform.position.y);
+            pos = new Vector2(transform.position.x, transform.position.y);        
+            angle = Math.Abs(Math.Atan2(pos.y - targetPos.y, pos.x - targetPos.x) * 180f / Math.PI); 
+        }
     }
 
     void FixedUpdate()
     {
-        if (Vector2.Distance(transform.position, target.transform.position) > stoppingDistance)
+        if (cm.getIsFollowing())
         {
-            cm.setRunning(target.getIsRunning());
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, target.getMoveSpeed() * Time.deltaTime);
-            handleAnimation();
-        }
-        else
-        {
-            cm.clearDirectionalBuffer(5);
+            if (Vector2.Distance(transform.position, target.transform.position) > stoppingDistance)
+            {
+                cm.setRunning(target.getIsRunning());
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, target.getMoveSpeed() * Time.deltaTime);
+                handleAnimation();
+            }
+            else
+            {
+                cm.clearDirectionalBuffer(5);
+            }
         }
     }
 

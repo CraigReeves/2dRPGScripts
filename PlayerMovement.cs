@@ -33,7 +33,7 @@ public class PlayerMovement : CharacterMovement
             setRunning(false);
         }
     }
-    
+        
     protected override void HandleControlOfCharacter()
     {
         // handle player movement 

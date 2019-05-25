@@ -7,13 +7,9 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public abstract class EventSequence : MonoBehaviour
-{
-    // Get player object
-    [SerializeField]
-    protected GameObject player;
-    
+{    
     // Get NPC objects
-    [SerializeField] protected GameObject[] npcs;
+    [SerializeField] protected CharacterMovement[] npcs;
     
     // event worker instance
     private EventWorker eventWorker;
@@ -48,10 +44,7 @@ public abstract class EventSequence : MonoBehaviour
 
     // determines if player is making contact with event's collision box
     private bool withinEventZone;
-    
-    // for prompt window
-    protected int promptOption = 1;
-    
+        
     // determines if script runs only once or can be run more than once
     public bool runOnce;
     
@@ -66,16 +59,31 @@ public abstract class EventSequence : MonoBehaviour
     // function callback for prompt window
     public delegate void PromptCallback(int choice);
     
+    // gets the player that is under our control
+    protected PlayerMovement player()
+    {
+        return gameWorld.partyLeader();
+    }
+
+    protected PlayerMovement player(string playerName)
+    {
+        // go through party and find correct player
+        PlayerMovement foundPlayer = player();
+        
+        foreach (var player in gameWorld.party)
+        {
+            if (player.name != playerName) continue;
+
+            foundPlayer = player;
+        }
+
+        return foundPlayer;
+    }
+    
     protected void Start()
     {
         // Initialize event worker
         eventWorker = gameObject.AddComponent<EventWorker>();
-        
-        // find player if it is empty
-        if (player == null)
-        {
-            player = FindObjectOfType<PlayerMovement>().gameObject;
-        }
         
         // Find dialog manager
         dialogManager = FindObjectOfType<DialogManager>();
@@ -135,12 +143,6 @@ public abstract class EventSequence : MonoBehaviour
                 withinEventZone = false;
             }
         }  
-    }
-    
-    // gets player
-    public GameObject getPlayer()
-    {
-        return player;
     }
     
     // handle collision with entities
@@ -225,207 +227,201 @@ public abstract class EventSequence : MonoBehaviour
         }
     }
 
-    public void setPromptOption(int setting)
-    {
-        promptOption = setting;
-    }
-
-    
     //////////////////////////////////////////// CALLBACKS //////////////////////////////////////////////////////
 
     // facing commands
 
-    protected void faceNorth(GameObject character)
+    protected void faceNorth(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceNorth");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceSouth(GameObject character)
+    protected void faceSouth(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceSouth");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceEast(GameObject character)
+    protected void faceEast(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceEast");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
-    protected void faceWest(GameObject character)
+    protected void faceWest(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("faceWest");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);  
     }
     
     // movement commands
     
-    protected void walkEast(GameObject character, float distance)
+    protected void walkEast(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkEast");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
 
-    protected void walkNW(GameObject character, float distance)
+    protected void walkNW(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkNE(GameObject character, float distance)
+    protected void walkNE(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSE(GameObject character, float distance)
+    protected void walkSE(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSW(GameObject character, float distance)
+    protected void walkSW(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNW(GameObject character, float distance)
+    protected void runNW(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNE(GameObject character, float distance)
+    protected void runNE(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSE(GameObject character, float distance)
+    protected void runSE(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSE");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSW(GameObject character, float distance)
+    protected void runSW(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSW");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkNorth(GameObject character, float distance)
+    protected void walkNorth(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkNorth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkWest(GameObject character, float distance)
+    protected void walkWest(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkWest");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void walkSouth(GameObject character, float distance)
+    protected void walkSouth(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("walkSouth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
      }
     
-    protected void runEast(GameObject character, float distance)
+    protected void runEast(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runEast");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runSouth(GameObject character, float distance)
+    protected void runSouth(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runSouth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runNorth(GameObject character, float distance)
+    protected void runNorth(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runNorth");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void runWest(GameObject character, float distance)
+    protected void runWest(CharacterMovement character, float distance)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("runWest");
         command.setFloatParams(distance);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
 
-    protected void stealControl(GameObject character)
+    protected void stealControl(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("stealControl");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command); 
     }
 
-    protected void returnControl(GameObject character)
+    protected void returnControl(CharacterMovement character)
     {
         var command = ScriptableObject.CreateInstance<Command>();
         command.setName("returnControl");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         command.setEventSequenceParam(this);
         eventWorker.storeInQueue(command);
     }
@@ -446,7 +442,7 @@ public abstract class EventSequence : MonoBehaviour
         msgClose();
     }
 
-    protected void turnToFace(GameObject character, GameObject reference)
+    protected void turnToFace(CharacterMovement character, CharacterMovement reference)
     {
         CharacterMovement cm = character.GetComponent<CharacterMovement>();
         var playerPos = new Vector2(reference.transform.position.x, reference.transform.position.y);
@@ -479,20 +475,20 @@ public abstract class EventSequence : MonoBehaviour
         }
     }
 
-    public void positionCharacter(GameObject character, float x, float y)
+    public void positionCharacter(CharacterMovement character, float x, float y)
     {
         var command = newCom();
         command.setName("positionCharacter");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         command.setFloatParams(x, y);
         eventWorker.storeInQueue(command);
     }
 
-    public void triggerAnimation(GameObject character, string trigger)
+    public void triggerAnimation(CharacterMovement character, string trigger)
     {
         var command = newCom();
         command.setName("triggerAnimation");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         command.setStringParams(trigger);
         eventWorker.storeInQueue(command);
     }
@@ -520,11 +516,11 @@ public abstract class EventSequence : MonoBehaviour
     {
         
         // clear directional buffer for all characters involved
-        player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
         
-        for (var i = 0; i < npcs.Length; i++)
+        foreach (var npc in npcs)
         {
-            npcs[i].GetComponent<NPCMovement>().clearDirectionalBuffer();
+            npc.GetComponent<NPCMovement>().clearDirectionalBuffer();
         }
         
         eventWorker.pauseNow();
@@ -549,7 +545,7 @@ public abstract class EventSequence : MonoBehaviour
     public void cancelSequence()
     {
         // clear directional buffer for all characters involved in script
-        player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
         
         
         foreach (var npc in npcs)
@@ -563,7 +559,7 @@ public abstract class EventSequence : MonoBehaviour
     protected void wait()
     {
         // clear directional buffer for all characters involved in script
-        player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
         
         foreach (var npc in npcs)
         {
@@ -579,7 +575,7 @@ public abstract class EventSequence : MonoBehaviour
     protected void waitForPrompt(PromptCallback callback)
     {
         // clear directional buffer for all characters
-        player.GetComponent<PlayerMovement>().clearDirectionalBuffer();
+        player().GetComponent<PlayerMovement>().clearDirectionalBuffer();
         
         foreach (var npc in npcs)
         {
@@ -592,7 +588,6 @@ public abstract class EventSequence : MonoBehaviour
         command.setDialogManagerParam(dialogManager);
         eventWorker.storeInQueue(command);
     }
-    
     
     // control the flow of other events
     
@@ -650,25 +645,25 @@ public abstract class EventSequence : MonoBehaviour
         eventWorker.storeInQueue(command);
     }
     
-    protected void picMsg(string name, string message, GameObject character, int avatarIndex)
+    protected void picMsg(string name, string message, CharacterMovement character, int avatarIndex)
     {
         Command command = newCom();
         command.setName("picMsg");
         command.setStringParams(name, message);
         command.setDialogManagerParam(dialogManager);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         command.setIntParams(avatarIndex);
         eventWorker.storeInQueue(command);
     }
     
-    protected void picMsg(string name, string message, float height, GameObject character, int avatarIndex)
+    protected void picMsg(string name, string message, float height, CharacterMovement character, int avatarIndex)
     {
         Command command = newCom();
         command.setName("picMsgWithHeight");
         command.setStringParams(name, message);
         command.setDialogManagerParam(dialogManager);
         command.setFloatParams(height);
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         command.setIntParams(avatarIndex);
         eventWorker.storeInQueue(command);
     }
@@ -682,14 +677,14 @@ public abstract class EventSequence : MonoBehaviour
     }
     
     // go to a different scene
-    protected void goToScene(float x, float y, GameObject inPlayer, bool partOfSequence)
+    protected void goToScene(float x, float y, CharacterMovement inPlayer, bool partOfSequence)
     {
         Command command = newCom();
         command.setName("goToScene");
         command.setSceneParam(scene);
         command.setFloatParams(x, y);
         command.setBoolParams(partOfSequence);
-        command.setGameObjectParam(inPlayer);
+        command.setGameObjectParam(inPlayer.gameObject);
         eventWorker.storeInQueue(command);
     }
 
@@ -703,19 +698,19 @@ public abstract class EventSequence : MonoBehaviour
     
     // hide and show characters
     
-    protected void showCharacter(GameObject character)
+    protected void showCharacter(CharacterMovement character)
     {
         Command command = newCom();
         command.setName("showCharacter");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     
-    protected void hideCharacter(GameObject character)
+    protected void hideCharacter(CharacterMovement character)
     {
         Command command = newCom();
         command.setName("hideCharacter");
-        command.setGameObjectParam(character);
+        command.setGameObjectParam(character.gameObject);
         eventWorker.storeInQueue(command);
     }
     

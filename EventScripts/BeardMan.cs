@@ -6,7 +6,7 @@ using UnityEngine;
 public class BeardMan : EventSequence
 {
 
-    private GameObject npc;
+    private CharacterMovement npc;
     private Wander wanderScript;
     
     // Start is called before the first frame update
@@ -19,15 +19,15 @@ public class BeardMan : EventSequence
 
     public override void run()
     {
-        stealControl(player);
+        stealControl(player());
         remotePause(wanderScript);
-        turnToFace(npc, player);
+        turnToFace(npc, player());
         msg("Man", "Your engine is coming along, you know.");
         wait();
         msg("Craig","Thanks!");
         wait();
         msgClose();
         remoteResumeSeq(wanderScript);
-        returnControl(player);
+        returnControl(player());
     }
 }

@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class SceneInit : MonoBehaviour
 {
 
-    private PlayerMovement player;
     private CameraController camera;
     private GameWorld gameWorld;
     private Animator faderAnim;
@@ -15,7 +14,6 @@ public class SceneInit : MonoBehaviour
     private void OnEnable()
     {
         gameWorld = FindObjectOfType<GameWorld>();
-        player = FindObjectOfType<PlayerMovement>();
         faderAnim = GameObject.Find("FaderImage").GetComponent<Animator>();
         weather = FindObjectOfType<Weather>();
         
@@ -24,7 +22,16 @@ public class SceneInit : MonoBehaviour
 
         if (nextDestination.x != 0 && nextDestination.y != 0)
         {
-            player.transform.position = new Vector3(nextDestination.x, nextDestination.y);
+            gameWorld.partyLeader().transform.position = new Vector3(nextDestination.x, nextDestination.y);
+            
+            // position remaining party members
+            if (gameWorld.party.Length > 1)
+            {
+                foreach (var player in gameWorld.party)
+                {
+                    player.transform.position = gameWorld.partyLeader().transform.position;
+                }
+            }
         }
 
         weather.rainByDefault = gameWorld.nextRain;
@@ -34,7 +41,7 @@ public class SceneInit : MonoBehaviour
         
         camera = FindObjectOfType<CameraController>();
 
-        camera.setFollowTarget(player.gameObject);
+        camera.setFollowTarget(gameWorld.partyLeader().gameObject);
         
         faderAnim.SetTrigger("fade_in");
     }

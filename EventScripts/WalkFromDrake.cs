@@ -7,7 +7,7 @@ public class WalkFromDrake : EventSequence
 
     public override void run()
     {
-        walkEast(player, 2f);
-        walkNorth(player, 2f);
+        walkEast(player(), 2f);
+        walkNorth(player(), 2f);
     }
 }
