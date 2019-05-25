@@ -13,7 +13,7 @@ public class GameWorld : MonoBehaviour
     private bool autoReturnControl;
     private List<Treasure> obtainedTreasures;
     public Hashtable gameState;
-    public PlayerMovement[] party;    
+    public PlayerMovement[] party;
     
     // Start is called before the first frame update
     void Start()
@@ -62,8 +62,18 @@ public class GameWorld : MonoBehaviour
     {
         var newOrder = new PlayerMovement[party.Length];
         
+        var partyPositions = new Vector3[party.Length];
+        
         for (var i = 0; i < party.Length; i++)
         {
+            party[i].setIsFollowing(false);
+            party[i].setControlOverride(true);
+            
+            // get old party positions
+            partyPositions[i].x = party[i].transform.position.x;
+            partyPositions[i].y = party[i].transform.position.y;
+            partyPositions[i].z = party[i].transform.position.z;
+            
             if (i == 0)
             {
                 newOrder[newOrder.Length - 1] = party[i];
@@ -71,9 +81,16 @@ public class GameWorld : MonoBehaviour
             }
 
             newOrder[i - 1] = party[i];
+            
         }
 
         party = newOrder;
+        
+        // reposition party
+        for (var i = 0; i < party.Length; i++)
+        {
+            party[i].transform.position = partyPositions[i];
+        }
         
         initializeParty();
     }
